@@ -24,6 +24,8 @@ EventBus="*res://globals/eventbus.gd"
 [display]
 
 window/size/height=640
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [gui]
 

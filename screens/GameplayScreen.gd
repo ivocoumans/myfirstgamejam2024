@@ -20,7 +20,7 @@ func _ready():
 
 
 func _on_EventBus_light_state_changed():
-	_set_light_state()
+	_switch_light()
 
 
 func _on_EventBus_player_started():
@@ -34,7 +34,7 @@ func _on_EventBus_player_finished():
 	pass
 
 
-func _set_light_state():
+func _switch_light():
 	var state = Globals.get_light_state()
 	if state == Globals.LightState.Dark:
 		fx_light.visible = false
@@ -91,7 +91,7 @@ func _input(event):
 		if Globals.get_light_state() == Globals.LightState.Light:
 			new_state = Globals.LightState.Dark
 		Globals.set_light_state(new_state)
-		_set_light_state()
+		_switch_light()
 
 
 func _process(delta):
@@ -116,7 +116,7 @@ func _start_game():
 	
 	$World/Camera2D.current = true
 	
-	_set_light_state()
+	_switch_light()
 
 
 func _game_over():

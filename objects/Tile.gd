@@ -6,13 +6,12 @@ const DARK_REGION = Rect2(64, 64, 32, 32)
 
 
 var is_pressed = false
-var state = null
 
 
 func _ready():
 	is_pressed = false
-	state = Globals.LightState.Light
 	_set_texture()
+	var _error = EventBus.connect("light_state_changed", self, "_on_EventBus_light_state_changed")
 
 
 func _on_Tile_body_entered(body):
@@ -22,7 +21,7 @@ func _on_Tile_body_entered(body):
 	if body.is_in_group("player"):
 		is_pressed = true
 		
-		state = Globals.get_light_state()
+		var state = Globals.get_light_state()
 		if state == Globals.LightState.Dark:
 			state = Globals.LightState.Light
 		else:
@@ -40,8 +39,12 @@ func _on_Tile_body_exited(body):
 		is_pressed = false
 
 
+func _on_EventBus_light_state_changed():
+	_set_texture()
+
+
 func _set_texture():
-	if state == Globals.LightState.Dark:
+	if Globals.get_light_state() == Globals.LightState.Dark:
 		$Sprite.region_rect = DARK_REGION
 	else:
 		$Sprite.region_rect = LIGHT_REGION
