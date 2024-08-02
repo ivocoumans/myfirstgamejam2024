@@ -4,7 +4,7 @@ extends Node
 signal light_state_changed()
 signal keys_changed()
 signal gems_changed()
-signal score_changed()
+signal time_changed()
 signal switch_changed(id, pressed)
 signal player_started()
 signal player_finished()
@@ -22,8 +22,8 @@ func emit_gems_changed():
 	emit_signal("gems_changed")
 
 
-func emit_score_changed():
-	emit_signal("score_changed")
+func emit_time_changed():
+	emit_signal("time_changed")
 
 
 func emit_switch_changed(id, pressed):

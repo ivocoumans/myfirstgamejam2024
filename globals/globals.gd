@@ -11,7 +11,7 @@ var _light_state = LightState.Light
 var _keys = 0
 var _gems_in_level = 0
 var _gems = 0
-var _score = 0
+var _time = 0
 
 func get_light_state():
 	return _light_state
@@ -60,21 +60,21 @@ func add_gem():
 	EventBus.emit_gems_changed()
 
 
-func get_score():
-	return _score
+func get_time():
+	return _time
 
 
-func increase_score():
-	_score += 1
-	EventBus.emit_score_changed()
+func increase_time():
+	_time += 1
+	EventBus.emit_time_changed()
 
 
 func reset():
 	_light_state = LightState.Light
 	_keys = 0
-	_score = 0
+	_time = 0
 	
 	EventBus.emit_light_state_changed()
 	EventBus.emit_keys_changed()
-	EventBus.emit_score_changed()
+	EventBus.emit_time_changed()
 

@@ -1,15 +1,23 @@
 extends Node
 
 
+const LEVEL_1 = preload("res://levels/TestLevel3.tscn")
+const LEVEL_2 = preload("res://levels/TestLevel1.tscn")
+const LEVEL_3 = preload("res://levels/TestLevel2.tscn")
+
+
 onready var world_light = $World/Level/Phases/Light
 onready var world_dark = $World/Level/Phases/Dark
 onready var phases = $World/Level/Phases
 onready var fx_light = $World/Light
 onready var fx_dark = $World/Dark
+onready var game_paused_modal = $CanvasLayer/UI/GamePausedModal
+onready var level_finished_modal = $CanvasLayer/UI/LevelFinishedModal
 
 
-var score_timer = 0
+var time_timer = 0
 var is_paused = false
+var is_started = false
 
 
 func _ready():
@@ -24,14 +32,14 @@ func _on_EventBus_light_state_changed():
 
 
 func _on_EventBus_player_started():
-	# TODO: update UI, start game (monsters, score, etc?)
-	pass
+	is_started = true
 
 
 func _on_EventBus_player_finished():
-	# TODO: update UI, finish game
-	print("Finished!")
-	pass
+	is_started = false
+	_pause_game(true)
+	level_finished_modal.set_text()
+	level_finished_modal.visible = true
 
 
 func _switch_light():
@@ -62,68 +70,54 @@ func _switch_worlds():
 
 
 func _input(event):
-	var is_game_start = $CanvasLayer/UI/GameStartModal.visible
-	var is_game_over = $CanvasLayer/UI/GameOverModal.visible
-	var is_game_pause = $CanvasLayer/UI/GamePauseModal.visible
+	var is_level_finished = level_finished_modal.visible
+	var is_game_paused = game_paused_modal.visible
 	
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 	
-	if !is_game_start and !is_game_over and !is_game_pause and event.is_action_pressed("ui_cancel"):
-		$CanvasLayer/UI/GamePauseModal.visible = true
-		_pause_game(true)
-		
-	if event.is_action_pressed("ui_accept"):
-		if is_game_start:
-			$CanvasLayer/UI/GameStartModal.visible = false
-			_pause_game(false)
-			if !BGM.is_playing():
-				BGM.play_title()
-		elif is_game_over:
-			$CanvasLayer/UI/GameOverModal.visible = false
-			_start_game()
-		elif is_game_pause:
-			$CanvasLayer/UI/GamePauseModal.visible = false
-			_pause_game(false)
+	if is_level_finished:
+		if event.is_action_pressed("ui_accept"):
+			level_finished_modal.visible = false
+			_next_level()
+	else:
+		if event.is_action_pressed("ui_pause"):
+			game_paused_modal.visible = !is_game_paused
+			_pause_game(!is_game_paused)
 	
-	if event.is_action_released("ui_select"):
-		var new_state = Globals.LightState.Light
-		if Globals.get_light_state() == Globals.LightState.Light:
-			new_state = Globals.LightState.Dark
-		Globals.set_light_state(new_state)
-		_switch_light()
+	if OS.is_debug_build():
+		if !is_paused and event.is_action_released("ui_debug"):
+			var new_state = Globals.LightState.Light
+			if Globals.get_light_state() == Globals.LightState.Light:
+				new_state = Globals.LightState.Dark
+			Globals.set_light_state(new_state)
+			_switch_light()
 
 
 func _process(delta):
 	if is_paused:
 		return
 	
-	score_timer += delta
-	if score_timer > 1:
-		Globals.increase_score()
-		score_timer = 0
+	if is_started:
+		time_timer += delta
+		if time_timer > 1:
+			Globals.increase_time()
+			time_timer = 0
 	
 	$World/Camera2D.position = $World/Player.position
 
 
+func _next_level():
+	# TODO: load next level
+	_start_game()
+
+
 func _start_game():
-#	$CanvasLayer/UI/GameStartModal.visible = true
-	
 	$World/Player.reset($World/Level/Start.position)
-	Globals.reset()
-	
-	_pause_game(false)
-	
 	$World/Camera2D.current = true
-	
+	Globals.reset()
 	_switch_light()
-
-
-func _game_over():
-	$CanvasLayer/UI/GameOverModal.visible = true
-	$CanvasLayer/UI/GameOverModal.set_score($CanvasLayer/UI/ScoreDisplay.get_score())
-	_pause_game(true)
-	SFX.play_game_over()
+	_pause_game(false)
 
 
 func _pause_game(paused):
