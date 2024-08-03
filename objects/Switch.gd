@@ -38,6 +38,11 @@ func _on_Switch_body_exited(body):
 	if !is_pressed or is_toggled:
 		return
 	
+	var parent_name = get_parent().name
+	var light_state = Globals.get_light_state()
+	if body.is_in_group("block") and (parent_name == "Light" and light_state != 0 or parent_name == "Dark" and light_state != 1):
+		return
+	
 	if body.is_in_group("player") or body.is_in_group("block"):
 		is_pressed = false
 		_set_texture()

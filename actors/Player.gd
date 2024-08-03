@@ -15,6 +15,7 @@ func reset(reset_position = null):
 	is_paused = false
 	if reset_position != null:
 		position = reset_position
+		print("Set player to ", reset_position)
 
 
 func pause(paused):

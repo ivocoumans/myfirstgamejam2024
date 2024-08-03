@@ -1,9 +1,9 @@
 extends Node
 
 
-const LEVEL_1 = preload("res://levels/TestLevel3.tscn")
-const LEVEL_2 = preload("res://levels/TestLevel1.tscn")
-const LEVEL_3 = preload("res://levels/TestLevel2.tscn")
+const LEVEL_1 = preload("res://levels/Level1.tscn")
+const LEVEL_2 = preload("res://levels/Level2.tscn")
+const LEVEL_3 = preload("res://levels/Level3.tscn")
 
 
 onready var world_light = $World/Level/Phases/Light
@@ -18,6 +18,7 @@ onready var level_finished_modal = $CanvasLayer/UI/LevelFinishedModal
 var time_timer = 0
 var is_paused = false
 var is_started = false
+var current_level = LEVEL_1
 
 
 func _ready():
@@ -108,12 +109,27 @@ func _process(delta):
 
 
 func _next_level():
-	# TODO: load next level
+	if current_level == LEVEL_1:
+		current_level = LEVEL_2
+	elif current_level == LEVEL_2:
+		current_level = LEVEL_3
+	else:
+		print("Game completed!")
+		return
+	
+	$World/Level.queue_free()
+	var new_level = current_level.instance()
+	new_level.name = "Level"
+	$World.add_child_below_node($World/OuterWalls, new_level)
+	
 	_start_game()
 
 
 func _start_game():
+	print("Start game")
+	print($World/Level/Start.position)
 	$World/Player.reset($World/Level/Start.position)
+	print($World/Player.position)
 	$World/Camera2D.current = true
 	Globals.reset()
 	_switch_light()
