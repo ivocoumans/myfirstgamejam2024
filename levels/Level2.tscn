@@ -180,6 +180,7 @@ switch_id = 2
 position = Vector2( 144, 176 )
 
 [node name="Dark" type="Node2D" parent="Phases"]
+visible = false
 
 [node name="Terrain" type="TileMap" parent="Phases/Dark"]
 tile_set = SubResource( 1 )

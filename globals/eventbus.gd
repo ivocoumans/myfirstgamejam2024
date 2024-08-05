@@ -8,6 +8,7 @@ signal time_changed()
 signal switch_changed(id, pressed)
 signal player_started()
 signal player_finished()
+signal level_loaded(level)
 
 
 func emit_light_state_changed():
@@ -36,4 +37,8 @@ func emit_player_started():
 
 func emit_player_finished():
 	emit_signal("player_finished")
+
+
+func emit_level_loaded(level):
+	emit_signal("level_loaded", level)
 

@@ -15,7 +15,6 @@ func reset(reset_position = null):
 	is_paused = false
 	if reset_position != null:
 		position = reset_position
-		print("Set player to ", reset_position)
 
 
 func pause(paused):
@@ -25,6 +24,14 @@ func pause(paused):
 func get_rect():
 	var size = $Sprite.get_rect().size
 	return Rect2(position - (size / 2), size)
+
+
+func set_collision(enabled):
+	call_deferred("_set_collision", enabled)
+
+
+func _set_collision(enabled):
+	$CollisionShape2D.disabled = !enabled
 
 
 func _ready():

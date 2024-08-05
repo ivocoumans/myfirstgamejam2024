@@ -6,26 +6,36 @@ const LEVEL_2 = preload("res://levels/Level2.tscn")
 const LEVEL_3 = preload("res://levels/Level3.tscn")
 
 
-onready var world_light = $World/Level/Phases/Light
-onready var world_dark = $World/Level/Phases/Dark
-onready var phases = $World/Level/Phases
 onready var fx_light = $World/Light
 onready var fx_dark = $World/Dark
 onready var game_paused_modal = $CanvasLayer/UI/GamePausedModal
 onready var level_finished_modal = $CanvasLayer/UI/LevelFinishedModal
+onready var game_finished_modal = $CanvasLayer/UI/GameFinishedModal
 
 
 var time_timer = 0
 var is_paused = false
 var is_started = false
-var current_level = LEVEL_1
+var level = null
+var phases = null
+var world_light = null
+var world_dark = null
+var levels = [LEVEL_1, LEVEL_2, LEVEL_3]
+var current_level = 0
 
 
 func _ready():
+	level = $World/Level
+	phases = level.get_node("Phases")
+	world_light = phases.get_node("Light")
+	world_dark = phases.get_node("Dark")
+	
 	_start_game()
+	
 	var _error = EventBus.connect("light_state_changed", self, "_on_EventBus_light_state_changed")
 	_error = EventBus.connect("player_started", self, "_on_EventBus_player_started")
 	_error = EventBus.connect("player_finished", self, "_on_EventBus_player_finished")
+	_error = EventBus.connect("level_loaded", self, "_on_EventBus_level_loaded")
 
 
 func _on_EventBus_light_state_changed():
@@ -39,8 +49,22 @@ func _on_EventBus_player_started():
 func _on_EventBus_player_finished():
 	is_started = false
 	_pause_game(true)
+	
+	if current_level >= levels.size() - 1:
+		game_finished_modal.visible = true
+		return
+	
 	level_finished_modal.set_text()
 	level_finished_modal.visible = true
+
+
+func _on_EventBus_level_loaded(new_level):
+	level = new_level
+	phases = level.get_node("Phases")
+	world_light = phases.get_node("Light")
+	world_dark = phases.get_node("Dark")
+	
+	_start_game()
 
 
 func _switch_light():
@@ -71,13 +95,18 @@ func _switch_worlds():
 
 
 func _input(event):
+	var is_game_finished = game_finished_modal.visible
 	var is_level_finished = level_finished_modal.visible
 	var is_game_paused = game_paused_modal.visible
 	
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 	
-	if is_level_finished:
+	if is_game_finished:
+		if event.is_action_pressed("ui_accept"):
+			game_finished_modal.visible = false
+			_next_level()
+	elif is_level_finished:
 		if event.is_action_pressed("ui_accept"):
 			level_finished_modal.visible = false
 			_next_level()
@@ -109,30 +138,38 @@ func _process(delta):
 
 
 func _next_level():
-	if current_level == LEVEL_1:
-		current_level = LEVEL_2
-	elif current_level == LEVEL_2:
-		current_level = LEVEL_3
-	else:
-		print("Game completed!")
-		return
+	current_level += 1
+	if current_level >= levels.size():
+		current_level = 0
 	
-	$World/Level.queue_free()
-	var new_level = current_level.instance()
+	# disable player collision to collision in the new level before resetting position
+	$World/Player.set_collision(false)
+	$World/Player.reset(Vector2(-128, -128))
+	
+	# remove the level
+	$World.remove_child(level)
+	level.queue_free()
+	
+	# add the next level
+	var new_level = levels[current_level].instance()
 	new_level.name = "Level"
 	$World.add_child_below_node($World/OuterWalls, new_level)
 	
-	_start_game()
+	Globals.set_light_state(Globals.LightState.Light)
 
 
 func _start_game():
-	print("Start game")
-	print($World/Level/Start.position)
-	$World/Player.reset($World/Level/Start.position)
-	print($World/Player.position)
+	# reset everything
+	$World/Player.reset(level.get_node("Start").position)
+	$World/Camera2D.position = $World/Player.position
 	$World/Camera2D.current = true
 	Globals.reset()
 	_switch_light()
+	
+	# wait before enabling collision to avoid overlap
+	yield(get_tree().create_timer(0.1), "timeout")
+	$World/Player.set_collision(true)
+	
 	_pause_game(false)
 
 
