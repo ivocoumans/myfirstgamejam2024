@@ -47,15 +47,12 @@ func _physics_process(_delta):
 	
 	if direction.x < 0:
 		$AnimationPlayer.play("walk_left")
-		pass
 	elif direction.x > 0:
 		$AnimationPlayer.play("walk_right")
-		pass
 	elif direction.y < 0:
 		$AnimationPlayer.play("walk_up")
 	elif direction.y > 0:
 		$AnimationPlayer.play("walk_down")
-		pass
 	else:
 		$AnimationPlayer.stop(true)
 	
@@ -71,11 +68,4 @@ func check_box_collision(motion: Vector2) -> void:
 	var box = get_slide_collision(0).collider
 	if box and box.is_in_group("block"):
 		box.push(direction * push_speed)
-	
-#	move_and_slide(direction.normalized() * speed, Vector2.ZERO, false, 4, PI/4, false)
-#
-#	for i in get_slide_count():
-#		var collision = get_slide_collision(i)
-#		if collision.collider.is_in_group("block"):
-#			collision.collider.apply_central_impulse(-collision.normal * inertia)
 
