@@ -1,16 +1,36 @@
 extends StaticBody2D
 
 
+const TRAP_CLOSED_REGION = Rect2(128, 32, 32, 32)
+const TRAP_OPEN_REGION = Rect2(160, 32, 32, 32)
+const DOOR_CLOSED_REGION = Rect2(0, 0, 32, 32)
+
+
 export (bool) var is_open = false
 export (bool) var is_key_required = false
 export (int) var switch_id = -1
 
 
 func _set_texture():
-	if !is_open:
-		$Sprite.modulate.a8 = 255
+	var open_region = TRAP_OPEN_REGION
+	var closed_region = TRAP_CLOSED_REGION
+	var open_alpha = 255
+	var closed_alpha = 255
+	
+	if is_key_required:
+		closed_region = DOOR_CLOSED_REGION
+		open_alpha = 0
+	
+	if is_open:
+		$Sprite.region_rect = open_region
+		$Sprite2.region_rect = open_region
+		$Sprite.modulate.a8 = open_alpha
+		$Sprite2.modulate.a8 = open_alpha
 	else:
-		$Sprite.modulate.a8 = 0
+		$Sprite.region_rect = closed_region
+		$Sprite2.region_rect = closed_region
+		$Sprite.modulate.a8 = closed_alpha
+		$Sprite2.modulate.a8 = closed_alpha
 
 
 func _set_collision():

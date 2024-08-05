@@ -1,8 +1,8 @@
-extends Area2D
+extends StaticBody2D
 
 
-const LIGHT_REGION = Rect2(96, 96, 32, 32)
-const DARK_REGION = Rect2(64, 64, 32, 32)
+const LIGHT_REGION = Rect2(128, 64, 32, 32)
+const DARK_REGION = Rect2(192, 64, 32, 32)
 
 
 var is_pressed = false
@@ -14,7 +14,7 @@ func _ready():
 	var _error = EventBus.connect("light_state_changed", self, "_on_EventBus_light_state_changed")
 
 
-func _on_Tile_body_entered(body):
+func _on_Area2D_body_entered(body):
 	if is_pressed:
 		return
 	
@@ -31,7 +31,7 @@ func _on_Tile_body_entered(body):
 		_set_texture()
 
 
-func _on_Tile_body_exited(body):
+func _on_Area2D_body_exited(body):
 	if !is_pressed:
 		return
 	

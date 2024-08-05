@@ -1,8 +1,8 @@
 extends StaticBody2D
 
 
-const CLOSED_REGION = Rect2(0, 128, 32, 32)
-const OPEN_REGION = Rect2(32, 128, 32, 32)
+const CLOSED_REGION = Rect2(96, 160, 32, 32)
+const OPEN_REGION = Rect2(128, 160, 32, 32)
 
 
 export (bool) var is_open = false

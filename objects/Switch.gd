@@ -1,8 +1,8 @@
 extends Area2D
 
 
-const DEPRESSED_REGION = Rect2(128, 64, 32, 32)
-const PRESSED_REGION = Rect2(128, 96, 32, 32)
+const DEPRESSED_REGION = Rect2(0, 32, 32, 32)
+const PRESSED_REGION = Rect2(32, 32, 32, 32)
 
 
 export (bool) var is_toggled = false

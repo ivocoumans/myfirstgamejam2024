@@ -45,6 +45,20 @@ func _physics_process(_delta):
 	direction.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	direction.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	
+	if direction.x < 0:
+		$AnimationPlayer.play("walk_left")
+		pass
+	elif direction.x > 0:
+		$AnimationPlayer.play("walk_right")
+		pass
+	elif direction.y < 0:
+		$AnimationPlayer.play("walk_up")
+	elif direction.y > 0:
+		$AnimationPlayer.play("walk_down")
+		pass
+	else:
+		$AnimationPlayer.stop(true)
+	
 	velocity = move_and_slide(direction.normalized() * speed, Vector2.ZERO)
 	if get_slide_count() > 0:
 		check_box_collision(direction)
