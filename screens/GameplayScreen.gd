@@ -4,11 +4,14 @@ extends Node
 const LEVEL_1 = preload("res://levels/Level1.tscn")
 const LEVEL_2 = preload("res://levels/Level2.tscn")
 const LEVEL_3 = preload("res://levels/Level3.tscn")
-
-
 const SFX_LEVEL_FINISHED = preload("res://assets/audio/sfx/level_finished.wav")
 const SFX_LIGHT_SWITCH = preload("res://assets/audio/sfx/light_switch.wav")
 const SFX_PAUSE = preload("res://assets/audio/sfx/pause.wav")
+
+
+const LIGHT_PITCH = 1.0
+const DARK_PITCH = 0.95
+const TRANSITION = 1.5
 
 
 onready var fx_light = $World/Light
@@ -78,7 +81,21 @@ func _fade_out_music():
 	$Tween.start()
 
 
-func _on_Tween_tween_completed(object, _key):
+func _transition_music():
+	var initial = LIGHT_PITCH
+	var final = DARK_PITCH
+	
+	if Globals.get_light_state() == Globals.LightState.Light:
+		initial = DARK_PITCH
+		final = LIGHT_PITCH
+	
+	$Tween.interpolate_property($BGM, "pitch_scale", initial, final, TRANSITION, Tween.EASE_IN, 0)
+	$Tween.start()
+
+
+func _on_Tween_tween_completed(object, key):
+	if key != "volume_db":
+		return
 	object.stop()
 	$BGM.volume_db = initial_volume
 
@@ -97,11 +114,10 @@ func _switch_light():
 	if state == Globals.LightState.Dark:
 		fx_light.visible = false
 		fx_dark.visible = true
-		$BGM.pitch_scale = 0.95
 	else:
 		fx_light.visible = true
 		fx_dark.visible = false
-		$BGM.pitch_scale = 1
+	_transition_music()
 	call_deferred("_switch_worlds")
 
 

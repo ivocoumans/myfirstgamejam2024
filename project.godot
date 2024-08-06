@@ -10,9 +10,14 @@ config_version=4
 
 [application]
 
-config/name="My First Game Jam 2024"
+config/name="Phaseshifter"
+config/description="My submission to the My First Game Jam 2024: Phaseshifter.
+Control the moon phase with magical orbs, shifting between light and dark, to solve the puzzles ahead."
 run/main_scene="res://screens/GameplayScreen.tscn"
 boot_splash/show_image=false
+config/icon="res://assets/icon.png"
+config/macos_native_icon="res://assets/icon.icns"
+config/windows_native_icon="res://assets/icon.ico"
 
 [autoload]
 
