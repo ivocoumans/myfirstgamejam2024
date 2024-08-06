@@ -3,7 +3,8 @@ extends StaticBody2D
 
 const TRAP_CLOSED_REGION = Rect2(128, 32, 32, 32)
 const TRAP_OPEN_REGION = Rect2(160, 32, 32, 32)
-const DOOR_CLOSED_REGION = Rect2(0, 0, 32, 32)
+const DOOR_CLOSED_REGION1 = Rect2(128, 0, 32, 32)
+const DOOR_CLOSED_REGION2 = Rect2(160, 0, 32, 32)
 const SFX_SWITCH_DOOR = preload("res://assets/audio/sfx/switch_door.wav")
 
 
@@ -14,12 +15,14 @@ export (int) var switch_id = -1
 
 func _set_texture():
 	var open_region = TRAP_OPEN_REGION
-	var closed_region = TRAP_CLOSED_REGION
+	var closed_region1 = TRAP_CLOSED_REGION
+	var closed_region2 = TRAP_CLOSED_REGION
 	var open_alpha = 255
 	var closed_alpha = 255
 	
 	if is_key_required:
-		closed_region = DOOR_CLOSED_REGION
+		closed_region1 = DOOR_CLOSED_REGION1
+		closed_region2 = DOOR_CLOSED_REGION2
 		open_alpha = 0
 	
 	if is_open:
@@ -28,8 +31,8 @@ func _set_texture():
 		$Sprite.modulate.a8 = open_alpha
 		$Sprite2.modulate.a8 = open_alpha
 	else:
-		$Sprite.region_rect = closed_region
-		$Sprite2.region_rect = closed_region
+		$Sprite.region_rect = closed_region1
+		$Sprite2.region_rect = closed_region2
 		$Sprite.modulate.a8 = closed_alpha
 		$Sprite2.modulate.a8 = closed_alpha
 

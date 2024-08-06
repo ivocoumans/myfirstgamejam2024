@@ -23,7 +23,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=7]
 resource_name = "item"
-loop = true
+length = 0.75
 step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:region_rect")
@@ -125,3 +125,10 @@ anims/walk_down = SubResource( 2 )
 anims/walk_left = SubResource( 5 )
 anims/walk_right = SubResource( 6 )
 anims/walk_up = SubResource( 4 )
+
+[node name="SpriteItem" type="Sprite" parent="."]
+visible = false
+position = Vector2( 1, -28 )
+scale = Vector2( 0.75, 0.75 )
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
