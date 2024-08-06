@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://objects/Key.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/Block.tscn" type="PackedScene" id=2]
@@ -11,7 +11,6 @@
 [ext_resource path="res://objects/Chest.tscn" type="PackedScene" id=9]
 [ext_resource path="res://objects/Switch.tscn" type="PackedScene" id=10]
 [ext_resource path="res://levels/Level.gd" type="Script" id=11]
-[ext_resource path="res://objects/DoorH.tscn" type="PackedScene" id=12]
 
 [node name="Level" type="Node2D"]
 script = ExtResource( 11 )
@@ -64,10 +63,6 @@ switch_id = 2
 
 [node name="Block" parent="Phases/Light" instance=ExtResource( 2 )]
 position = Vector2( 144, 176 )
-
-[node name="DoorH" parent="Phases/Light" instance=ExtResource( 12 )]
-position = Vector2( 64, 432 )
-is_key_required = true
 
 [node name="Dark" type="Node2D" parent="Phases"]
 visible = false
