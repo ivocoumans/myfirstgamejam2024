@@ -73,8 +73,10 @@ func reset():
 	_light_state = LightState.Light
 	_keys = 0
 	_time = 0
+	_gems = 0
 	
 	EventBus.emit_light_state_changed()
 	EventBus.emit_keys_changed()
 	EventBus.emit_time_changed()
+	EventBus.emit_gems_changed()
 

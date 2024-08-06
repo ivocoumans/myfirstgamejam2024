@@ -14,6 +14,7 @@ const SFX_PAUSE = preload("res://assets/audio/sfx/pause.wav")
 onready var fx_light = $World/Light
 onready var fx_dark = $World/Dark
 onready var game_paused_modal = $CanvasLayer/UI/GamePausedModal
+onready var game_reset_modal = $CanvasLayer/UI/GameResetModal
 onready var level_finished_modal = $CanvasLayer/UI/LevelFinishedModal
 onready var game_finished_modal = $CanvasLayer/UI/GameFinishedModal
 
@@ -109,6 +110,7 @@ func _input(event):
 	var is_game_finished = game_finished_modal.visible
 	var is_level_finished = level_finished_modal.visible
 	var is_game_paused = game_paused_modal.visible
+	var is_game_reset = game_reset_modal.visible
 	
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
@@ -123,8 +125,19 @@ func _input(event):
 			_next_level()
 	else:
 		if event.is_action_pressed("ui_pause"):
-			game_paused_modal.visible = !is_game_paused
-			_pause_game(!is_game_paused)
+			if is_game_reset:
+				game_reset_modal.visible = false
+				_pause_game(false)
+			else:
+				game_paused_modal.visible = !is_game_paused
+				_pause_game(!is_game_paused)
+		elif event.is_action_pressed("ui_reset"):
+			if is_game_reset:
+				_reset_level()
+				game_reset_modal.visible = false
+			else:
+				game_reset_modal.visible = true
+				_pause_game(true)
 	
 	if OS.is_debug_build():
 		if !is_paused and event.is_action_released("ui_debug"):
@@ -146,6 +159,11 @@ func _process(delta):
 			time_timer = 0
 	
 	$World/Camera2D.position = $World/Player.position
+
+
+func _reset_level():
+	current_level -= 1
+	_next_level()
 
 
 func _next_level():
