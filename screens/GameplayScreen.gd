@@ -31,7 +31,6 @@ var world_light = null
 var world_dark = null
 var levels = [LEVEL_1, LEVEL_2, LEVEL_3]
 var current_level = 0
-var initial_volume = 0
 
 
 func _ready():
@@ -39,8 +38,6 @@ func _ready():
 	phases = level.get_node("Phases")
 	world_light = phases.get_node("Light")
 	world_dark = phases.get_node("Dark")
-	
-	initial_volume = $BGM.volume_db
 	
 	_start_game()
 	
@@ -63,7 +60,6 @@ func _on_EventBus_player_finished():
 	is_started = false
 	_pause_game(true)
 	
-	_fade_out_music()
 	SFX.play(SFX_LEVEL_FINISHED)
 	
 	if current_level >= levels.size() - 1:
@@ -73,31 +69,6 @@ func _on_EventBus_player_finished():
 	level_finished_modal.set_text()
 	level_finished_modal.visible = true
 	SFX.enabled(false)
-
-
-func _fade_out_music():
-	initial_volume = $BGM.volume_db
-	$Tween.interpolate_property($BGM, "volume_db", initial_volume, -80, 1.0, 1, Tween.EASE_IN, 0)
-	$Tween.start()
-
-
-func _transition_music():
-	var initial = LIGHT_PITCH
-	var final = DARK_PITCH
-	
-	if Globals.get_light_state() == Globals.LightState.Light:
-		initial = DARK_PITCH
-		final = LIGHT_PITCH
-	
-	$Tween.interpolate_property($BGM, "pitch_scale", initial, final, TRANSITION, Tween.EASE_IN, 0)
-	$Tween.start()
-
-
-func _on_Tween_tween_completed(object, key):
-	if key != "volume_db":
-		return
-	object.stop()
-	$BGM.volume_db = initial_volume
 
 
 func _on_EventBus_level_loaded(new_level):
@@ -117,7 +88,6 @@ func _switch_light():
 	else:
 		fx_light.visible = true
 		fx_dark.visible = false
-	_transition_music()
 	call_deferred("_switch_worlds")
 
 
@@ -232,12 +202,6 @@ func _start_game():
 	
 	_pause_game(false)
 	SFX.enabled(true)
-	
-	# start BGM
-	$Tween.stop_all()
-	$BGM.volume_db = initial_volume
-	$BGM.pitch_scale = 1
-	$BGM.play()
 
 
 func _pause_game(paused):
