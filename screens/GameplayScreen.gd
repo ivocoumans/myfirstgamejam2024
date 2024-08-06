@@ -112,7 +112,7 @@ func _input(event):
 	var is_game_paused = game_paused_modal.visible
 	var is_game_reset = game_reset_modal.visible
 	
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") and OS.get_name() != "HTML5":
 		get_tree().quit()
 	
 	if is_game_finished:

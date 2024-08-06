@@ -19,6 +19,8 @@ func reset(reset_position = null):
 
 func pause(paused):
 	is_paused = paused
+	if paused:
+		$AnimationPlayer.stop()
 
 
 func get_rect():
