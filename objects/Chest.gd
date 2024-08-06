@@ -3,6 +3,7 @@ extends StaticBody2D
 
 const CLOSED_REGION = Rect2(96, 160, 32, 32)
 const OPEN_REGION = Rect2(128, 160, 32, 32)
+const SFX_ITEM = preload("res://assets/audio/sfx/item.wav")
 
 
 export (bool) var is_open = false
@@ -40,5 +41,7 @@ func _on_EventBus_switch_changed(id, pressed):
 func _toggle_open(open = false):
 	is_open = open
 	_set_texture()
+	if open:
+		SFX.play(SFX_ITEM)
 	Globals.add_gem()
 

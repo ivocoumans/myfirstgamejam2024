@@ -51,7 +51,6 @@ switch_id = 2
 position = Vector2( 976, 304 )
 
 [node name="Dark" type="Node2D" parent="Phases"]
-visible = false
 
 [node name="Terrain" type="TileMap" parent="Phases/Dark"]
 tile_set = ExtResource( 4 )
@@ -69,6 +68,7 @@ tile_data = PoolIntArray( -65533, 14, 0, -65517, 14, 0, -65512, 14, 0, 3, 7, 0, 
 
 [node name="DoorH" parent="Phases/Dark" instance=ExtResource( 12 )]
 position = Vector2( 768, 496 )
+switch_id = 1
 
 [node name="Door2" parent="Phases/Dark" instance=ExtResource( 3 )]
 position = Vector2( 784, 320 )

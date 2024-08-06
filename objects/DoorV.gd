@@ -4,6 +4,7 @@ extends StaticBody2D
 const TRAP_CLOSED_REGION = Rect2(128, 32, 32, 32)
 const TRAP_OPEN_REGION = Rect2(160, 32, 32, 32)
 const DOOR_CLOSED_REGION = Rect2(0, 0, 32, 32)
+const SFX_SWITCH_DOOR = preload("res://assets/audio/sfx/switch_door.wav")
 
 
 export (bool) var is_open = false
@@ -63,4 +64,5 @@ func _toggle_door(open = false):
 	is_open = open
 	_set_texture()
 	call_deferred("_set_collision")
+	SFX.play(SFX_SWITCH_DOOR)
 

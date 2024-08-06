@@ -6,6 +6,11 @@ const LEVEL_2 = preload("res://levels/Level2.tscn")
 const LEVEL_3 = preload("res://levels/Level3.tscn")
 
 
+const SFX_LEVEL_FINISHED = preload("res://assets/audio/sfx/level_finished.wav")
+const SFX_LIGHT_SWITCH = preload("res://assets/audio/sfx/light_switch.wav")
+const SFX_PAUSE = preload("res://assets/audio/sfx/pause.wav")
+
+
 onready var fx_light = $World/Light
 onready var fx_dark = $World/Dark
 onready var game_paused_modal = $CanvasLayer/UI/GamePausedModal
@@ -39,6 +44,7 @@ func _ready():
 
 
 func _on_EventBus_light_state_changed():
+	SFX.play(SFX_LIGHT_SWITCH)
 	_switch_light()
 
 
@@ -50,12 +56,15 @@ func _on_EventBus_player_finished():
 	is_started = false
 	_pause_game(true)
 	
+	SFX.play(SFX_LEVEL_FINISHED)
+	
 	if current_level >= levels.size() - 1:
 		game_finished_modal.visible = true
 		return
 	
 	level_finished_modal.set_text()
 	level_finished_modal.visible = true
+	SFX.enabled(false)
 
 
 func _on_EventBus_level_loaded(new_level):
@@ -72,9 +81,11 @@ func _switch_light():
 	if state == Globals.LightState.Dark:
 		fx_light.visible = false
 		fx_dark.visible = true
+		$BGM.pitch_scale = 0.95
 	else:
 		fx_light.visible = true
 		fx_dark.visible = false
+		$BGM.pitch_scale = 1
 	call_deferred("_switch_worlds")
 
 
@@ -171,9 +182,11 @@ func _start_game():
 	$World/Player.set_collision(true)
 	
 	_pause_game(false)
+	SFX.enabled(true)
 
 
 func _pause_game(paused):
 	is_paused = paused
 	$World/Player.pause(paused)
+	SFX.play(SFX_PAUSE)
 

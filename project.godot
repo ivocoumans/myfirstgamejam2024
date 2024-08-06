@@ -16,10 +16,9 @@ boot_splash/show_image=false
 
 [autoload]
 
-BGM="*res://ui/BGM.tscn"
-SFX="*res://ui/SFX.tscn"
 Globals="*res://globals/globals.gd"
 EventBus="*res://globals/eventbus.gd"
+SFX="*res://globals/SFX.gd"
 
 [display]
 

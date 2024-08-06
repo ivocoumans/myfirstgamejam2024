@@ -3,6 +3,7 @@ extends Area2D
 
 const DEPRESSED_REGION = Rect2(0, 32, 32, 32)
 const PRESSED_REGION = Rect2(32, 32, 32, 32)
+const SFX_SWITCH_DOOR = preload("res://assets/audio/sfx/switch_door.wav")
 
 
 export (bool) var is_toggled = false
@@ -29,9 +30,7 @@ func _on_Switch_body_entered(body):
 		return
 	
 	if body.is_in_group("player") or body.is_in_group("block"):
-		is_pressed = true
-		_set_texture()
-		EventBus.emit_switch_changed(switch_id, is_pressed)
+		_toggle_switch(true)
 
 
 func _on_Switch_body_exited(body):
@@ -44,7 +43,13 @@ func _on_Switch_body_exited(body):
 		return
 	
 	if body.is_in_group("player") or body.is_in_group("block"):
-		is_pressed = false
-		_set_texture()
-		EventBus.emit_switch_changed(switch_id, is_pressed)
+		_toggle_switch(false)
+
+
+func _toggle_switch(pressed = false):
+	is_pressed = pressed
+	_set_texture()
+	EventBus.emit_switch_changed(switch_id, is_pressed)
+	SFX.play(SFX_SWITCH_DOOR)
+
 

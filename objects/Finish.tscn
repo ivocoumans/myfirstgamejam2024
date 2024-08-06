@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://objects/Finish.gd" type="Script" id=1]
-[ext_resource path="res://assets/Tilesets/TilesetFloor.png" type="Texture" id=2]
-[ext_resource path="res://assets/Tilesets/TilesetDungeon.png" type="Texture" id=3]
+[ext_resource path="res://assets/tilesets/TilesetFloor.png" type="Texture" id=2]
+[ext_resource path="res://assets/tilesets/TilesetDungeon.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 16, 32 )
