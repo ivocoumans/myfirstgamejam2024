@@ -7,7 +7,7 @@
 extents = Vector2( 14, 15 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 24, 24 )
+extents = Vector2( 22, 22 )
 
 [node name="Tile" type="StaticBody2D" groups=["tile"]]
 script = ExtResource( 2 )

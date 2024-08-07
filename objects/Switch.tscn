@@ -4,7 +4,7 @@
 [ext_resource path="res://objects/Switch.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 10, 7 )
+extents = Vector2( 12, 9 )
 
 [node name="Switch" type="Area2D" groups=["tile"]]
 script = ExtResource( 2 )

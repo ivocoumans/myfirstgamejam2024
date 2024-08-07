@@ -4,7 +4,7 @@
 [ext_resource path="res://assets/spritesheets/player.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 13, 14 )
+extents = Vector2( 12, 12 )
 
 [sub_resource type="Animation" id=3]
 length = 0.001
